@@ -1,6 +1,7 @@
 FUNCTION_BLOCK FB403
 
 VAR_INPUT
+    TEST_VAR : REAL;
     Tanklevel_Prozent:REAL;
     
     Kegelstumpf_Oben:BOOL;
@@ -28,7 +29,7 @@ CONST
 END_CONST
 
 VAR_TEMP
-    // temporäre Variablen
+    // temporÃ¤re Variablen
     a, b, c, d: REAL;
     Kegelstumpf : STRUCT
         Oben:STRUCT
@@ -204,17 +205,17 @@ END_VAR
     // Berechnung Ist-Volumen des Tanks in Liter
     Istvolumen.Prozent.Tank := Tanklevel_Prozent/100;
     IF Zylinder_Stehend then
-        // Füllhöhe im oberen Tankabschnitt (Kegelstumpf)
+        // FÃ¼llhÃ¶he im oberen Tankabschnitt (Kegelstumpf)
         IF (Istvolumen.Prozent.Tank >= ((Hoehe.Unten + Zylinder.Stehend.Hoehe)/Hoehe.Tank)) THEN
             Hoehe.Ist := Hoehe.Oben - (Hoehe.Tank - Hoehe.Tank * Istvolumen.Prozent.Tank);
             Kegelstumpf.Oben.Radius_klein := Kegelstumpf.Oben.Radius_gross - (TAN(Kegelstumpf.Oben.Winkel) * Hoehe.Ist);
             Istvolumen.Liter.Oben := ((Hoehe.Ist * Pi / 3) * (Kegelstumpf.Oben.Radius_gross **2 + Kegelstumpf.Oben.Radius_gross * Kegelstumpf.Oben.Radius_klein + Kegelstumpf.Oben.Radius_klein **2))/1000000;
             Istvolumen.Liter.Tank := Istvolumen.Liter.Oben + Nennvolumen.Liter.Unten + Zylinder.Stehend.Volumen_Liter;
-        // Füllhöhe im mittleren Tankabschnitt (Zylinder)
+        // FÃ¼llhÃ¶he im mittleren Tankabschnitt (Zylinder)
         ELSIF (Istvolumen.Prozent.Tank >= (Hoehe.Unten/Hoehe.Tank)) THEN
             Hoehe.Ist := Hoehe.Tank * Istvolumen.Prozent.Tank - Hoehe.Unten;
             Istvolumen.Liter.Tank := Nennvolumen.Liter.Unten + (Pi * Zylinder.Stehend.Radius**2 * Hoehe.Ist)/1000000;
-        // Füllhöhe im unteren Tankabschnitt (Kegelstumpf)     
+        // FÃ¼llhÃ¶he im unteren Tankabschnitt (Kegelstumpf)     
         ELSIF (Istvolumen.Prozent.Tank <= (Hoehe.Unten/Hoehe.Tank)) THEN
             Hoehe.Ist := Hoehe.Tank * Istvolumen.Prozent.Tank;
             Kegelstumpf.Unten.Radius_gross := Hoehe.Ist * TAN(Kegelstumpf.Unten.Winkel);
